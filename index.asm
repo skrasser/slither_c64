@@ -8,9 +8,11 @@
 !byte $31,$35,$32,$00,$00,$00           ; puts BASIC line 2012 SYS 49152
 * = $c000 			        ; start address for 6502 code
 
+!source "code/zero.asm"
 !source "code/macro.asm"
 !source "code/main.asm"
-!source "code/zero.asm"
+!source "code/gfx.asm"
 !source "code/text.asm"
 !source "code/pixel.asm"
 !source "code/score.asm"
+!source "code/sfx.asm"
