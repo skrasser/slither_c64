@@ -60,20 +60,17 @@ joy_not_right	jmp joy_read
 	
 	;; *** Fill $ff bytes of memory referenced at zbl with accumulator
 fillmem 	ldy #$00
-fillmem1
-		sta (zbl),y
-	
+.fillmem1	sta (zbl),y
 		iny
-		bne fillmem1
+		bne .fillmem1
 		rts
 
 	;; *** Fill x bytes of memory referenced at zbl with accumulator
 fillmemn	ldy #$00
-fillmemn1
-		sta (zbl),y
+.fillmemn1	sta (zbl),y
 		iny
 		dex
-		bne fillmemn1
+		bne .fillmemn1
 		rts
 	
 busyloop	ldx #$00
@@ -81,15 +78,13 @@ busyloop1	inx
 		bne busyloop1
 		rts
 
-pressfire	lda #$2c	; store $2c80 in zbh/zbl
-		sta zbh
-		lda #$d8
-		sta zbl
-		lda #>pressfirestr ; store string address
-		sta zch
-		lda #<pressfirestr
-		sta zcl
+pressfire	+w_mov zbl, $2cd8		; store $2cd8 in zbh/zbl
+		+w_mov zcl, pressfirestr	; store string address
 		jsr puts
+		+w_mov zbl, $059b	; store $059b in zbh/zbl (corresponding color mem)
+		lda #$18		; set color to white (1) on orange (8)
+		ldx #18			; 18 characters
+		jsr fillmemn
 	
 		lda #$10	; bit 4
 .pressfire1	bit $dc00	; check fire button of jostick in port 2

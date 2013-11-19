@@ -33,14 +33,22 @@ setpix		lda #$00
 	
 	;; set colors for $3e8 cells starting at $0400
 		ldy #$00
-		lda #$81
+		lda #$51	; 5 = green fg, 1 = white bg
 setcol		sta $0400,y
 		sta $0500,y
 		sta $0600,y
 		sta $06e8,y
-
 		iny
 		bne setcol
+	
+	;; set color for first row of cells (40)
+	;; (optimize: this is overwriting $51 set above)
+		ldy #39
+		lda #$81
+setcoltop	sta $0400,y
+		dey
+		bpl setcoltop	; branch if bit 7 is unset
+
 		rts
 
 	;; *** Draw a frame starting in second row
