@@ -23,7 +23,7 @@ joy_read
 		beq no_collision
 		jsr snd_crash
 		lda #$00	; collision, set border color to black
-		sta $d020
+		sta vic+$20
 		jsr busyloop
 		jmp gamestart
 no_collision
@@ -78,10 +78,10 @@ busyloop1	inx
 		bne busyloop1
 		rts
 
-pressfire	+w_mov zbl, $2cd8		; store $2cd8 in zbh/zbl
-		+w_mov zcl, pressfirestr	; store string address
+pressfire	+w_mov zbl,bmpram+$cd8	; store $2cd8 in zbh/zbl
+		+w_mov zcl,pressfirestr	; store string address
 		jsr puts
-		+w_mov zbl, $059b	; store $059b in zbh/zbl (corresponding color mem)
+		+w_mov zbl,scrram+$19b	; store $059b in zbh/zbl (corresponding color mem)
 		lda #$18		; set color to white (1) on orange (8)
 		ldx #18			; 18 characters
 		jsr fillmemn
@@ -93,7 +93,7 @@ pressfire	+w_mov zbl, $2cd8		; store $2cd8 in zbh/zbl
 
 pressfirestr	!scr ">>> press fire <<<@"
 
-printscore	+w_mov zbl,$2000
+printscore	+w_mov zbl,bmpram
 		+w_mov zcl,scorestr
 		jsr puts
 		jsr score_print
