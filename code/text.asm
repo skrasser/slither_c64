@@ -1,18 +1,11 @@
 	;; *** Copy character memory
 cpcharmem	sei		; disable interrupts
-		lda $01		; load $01
+		lda $01		; load $0001
 		and #$fb	; clear bit 4
 		sta $01		; write back, character rom is now visible $d000
 
-		lda #$00	; load source address $d000 into zal/zah
-		sta zal
-		lda #$d0
-		sta zah
-
-		lda #$00	; load destination address $3000 into zal/zah
-		sta zbl
-		lda #$40
-		sta zbh
+		+w_mov zal,$d000	; load source address $d000 into zal/zah
+		+w_mov zbl,$4000	; load destination address $4000 into zal/zah
 
 		ldy #$00	; init offset in page to zero
 		ldx #$08	; copy 8 pages
@@ -25,7 +18,7 @@ cpcharmem	sei		; disable interrupts
 		dex		; one less page to go
 		bne .cpcharmem1	; pages left?
 	
-		lda $01		; load $01 again
+		lda $01		; load $0001 again
 		ora #$04	; set bit 4
 		sta $01		; write back, back to normal
 		cli		; enable interrupts
