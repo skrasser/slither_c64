@@ -22,9 +22,22 @@ joy_read
 		jsr readpix
 		beq no_collision
 		jsr snd_crash
+		lda #15
+		sta vic+$20
+		ldy #3
+		jsr waitframes
+		lda #12
+		sta vic+$20
+		ldy #3
+		jsr waitframes
+		lda #11
+		sta vic+$20
+		ldy #3
+		jsr waitframes
 		lda #$00	; collision, set border color to black
 		sta vic+$20
-		jsr busyloop
+		ldy #3
+		jsr waitframes
 		jmp gamestart
 no_collision
 		jsr drawpix
@@ -72,10 +85,22 @@ fillmemn	ldy #$00
 		dex
 		bne .fillmemn1
 		rts
-	
+
+	;; *** burn a few cycles
 busyloop	ldx #$00
 busyloop1	inx
 		bne busyloop1
+		rts
+
+	;; *** wait y frames
+waitframes	sei
+.waitframes1	lda vic+$12		; read raster pos
+		cmp #$ff		; occurs once per frame, so no need to check high bit
+		bne .waitframes1	; loop if not zero $ff
+		jsr busyloop		; burn some time, a raster line takes 63 cyles on PAL
+		dey			; subtract
+		bne .waitframes1	; not zero, wait for another
+		cli
 		rts
 
 pressfire	+w_mov zbl,bmpram+$cd8	; store $2cd8 in zbh/zbl
