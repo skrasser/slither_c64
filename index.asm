@@ -6,8 +6,8 @@
 * = $0801                               ; BASIC start address (#2049)
 !byte $0d,$08,$dc,$07,$9e,$20,$34,$39   ; BASIC loader to start at $c000...
 !byte $31,$35,$32,$00,$00,$00           ; puts BASIC line 2012 SYS 49152
-* = $c000 			        ; start address for 6502 code
 
+* = $c000 			        ; start address for 6502 code
 !source "code/zero.asm"
 !source "code/macro.asm"
 !source "code/main.asm"
@@ -16,3 +16,7 @@
 !source "code/pixel.asm"
 !source "code/score.asm"
 !source "code/sfx.asm"
+!source "code/irq.asm"
+
+* = $1000
+!bin "data/slither_r.sid",, $7c+2

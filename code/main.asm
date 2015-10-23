@@ -1,10 +1,14 @@
+		jsr irq_setup
+	
 		jsr cpcharmem	; copy character data to $4000
 		jsr initsid
 		jsr vicsetup
 		jsr clearscreen
 		jsr drawframe
 		jsr printscore
+	
 gamestart	jsr pressfire
+		jsr music_start
 		jsr clearscreen
 		jsr drawframe
 		jsr printscore
@@ -21,6 +25,8 @@ joy_read
 
 		jsr readpix
 		beq no_collision
+		jsr music_stop
+		jsr initsid
 		jsr snd_crash
 		lda #15
 		sta vic+$20
